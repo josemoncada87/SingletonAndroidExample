@@ -1,18 +1,27 @@
 package co.edu.dmi.monk.singleton;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
-public class MainActivity extends Activity {
+import java.util.Observable;
+import java.util.Observer;
+
+public class MainActivity extends Activity implements Observer {
+
+    private String textoEstado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Comunicacion.getInstance().setObserver(this);
 
         Button conectar  = (Button)findViewById(R.id.btn_conectar);
         conectar.setOnClickListener(new View.OnClickListener() {
@@ -26,19 +35,39 @@ public class MainActivity extends Activity {
         saludar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Comunicacion.getInstance().saludar();
+                Comunicacion.getInstance().saludar("Saludando desde la pantalla principal");
             }
         });
 
         Button cambiar  = (Button)findViewById(R.id.btn_cambiar);
-        conectar.setOnClickListener(new View.OnClickListener() {
+        cambiar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent i = new Intent(getApplicationContext(), ActividadSecundaria.class);
+                startActivity(i);
             }
         });
-
     }
+
+    public void updateUI(String cambio){
+        textoEstado = cambio;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                TextView estado = (TextView) findViewById(R.id.txt_estado_conexion);
+                estado.setText(textoEstado);
+            }
+        });
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        if(data instanceof String){
+            String s = (String)data;
+            updateUI(s);
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
