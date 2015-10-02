@@ -1,11 +1,12 @@
 package co.edu.dmi.monk.singleton;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
 /**
- * Created by 1130613425 on 30/09/2015.
+ * Created by jamoncada on 30/09/2015.
  */
 public class Comunicacion extends Thread {
 
@@ -20,7 +21,6 @@ public class Comunicacion extends Thread {
     @Override
     public void run() {
         while (true){
-            if(s == null){
                 try {
                    conectar();
                    sleep(33);
@@ -28,7 +28,7 @@ public class Comunicacion extends Thread {
                     e.printStackTrace();
                 }
             }
-        }
+
     }
 
     public static Comunicacion getInstance() {
@@ -45,6 +45,20 @@ public class Comunicacion extends Thread {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void saludar() {
+        if(s == null) {
+            try {
+                DataOutputStream salida =  new DataOutputStream(s.getOutputStream());
+                salida.writeUTF("Saludo :)");
+                salida.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //salida.close();
+            //s = null;
         }
     }
 }

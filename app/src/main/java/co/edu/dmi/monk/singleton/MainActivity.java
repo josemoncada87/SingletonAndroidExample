@@ -22,6 +22,22 @@ public class MainActivity extends Activity {
             }
         });
 
+        Button saludar  = (Button)findViewById(R.id.btn_saludar);
+        saludar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Comunicacion.getInstance().saludar();
+            }
+        });
+
+        Button cambiar  = (Button)findViewById(R.id.btn_cambiar);
+        conectar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
     }
 
     @Override
